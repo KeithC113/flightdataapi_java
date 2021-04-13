@@ -5,23 +5,21 @@ public class Flightdata {
     public static void main(String[] args) {
 
 // Create Variable for the connection string
-        String connectionUrl = "jdbc:sqlserver://localhost....XXXXXXXX";
+        String connectionUrl = "jdbc:sqlserver://localhost/flightdata_A";
+
 // Declare JDBC Objects
         Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
 
         try {
-
 // Establish the connection
             Class.forName(".com.mysql.jdbc.Driver").getDeclaredConstructor().newInstance();
                 conn = DriverManager.getConnection(connectionUrl);
 
 // Create & Execute SQL Query to return the data
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery(SQL);
-
-            String SQL ("CREATE TABLE Flights (\n" +
+            stmt = conn.createStatement()
+                    .execute("CREATE TABLE Flights (\n" +
                     " FlightId int, \n" +
                     " flight reservation varchar(6),\n" +
                     " outflightno varchar(5),\n" +
@@ -52,8 +50,6 @@ public class Flightdata {
                     " depair varchar(3),\n " +
                     " carrier varchar(10),\n"
             );
-        } catch (Exception e){
-            e.printStackTrace();
 
         } catch (SQLException ex) {
 //            Handle any errors
@@ -61,6 +57,7 @@ public class Flightdata {
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
+
         } finally {
             if (rs != null) {
                 try {
