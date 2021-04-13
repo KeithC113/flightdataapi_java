@@ -1,6 +1,10 @@
+import com.sun.org.apache.xerces.internal.xs.XSObjectList;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import javax.imageio.metadata.IIOMetadataNode;
 import javax.swing.plaf.synth.SynthOptionPaneUI;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -12,6 +16,8 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
+import java.util.Arrays;
+import java.util.List;
 
 public class Flightdata {
 
@@ -69,11 +75,10 @@ public class Flightdata {
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document xmlDoc = builder.parse(file);
         };
-        ;
 
 // Require the data from the nodes
         static private String getAttrValue(Node node,String attrName) {
-            if ( ! node.hasAttributes() ) return "";
+            if ( !node.hasAttributes() ) return "";
             NamedNodeMap nmap = node.getAttributes();
             if ( nmap == null ) return "";
             Node n = nmap.getNamedItem(attrName);
@@ -94,7 +99,7 @@ public class Flightdata {
 
 // Extract nodes for inserting into the database
         XPath xpath = XPathFactory.newInstance().newXPath();
-        Object res = xpath.evaluate("/flightdata_A/flights/",
+        Object res = xpath.evaluate("/flightdata_A.xml/flights/",
                 XPathConstants.NODESET);
 
         stmt.execute("INSERT INTO Flights " +
@@ -128,16 +133,38 @@ public class Flightdata {
                             "'carrier')");
 
 // loop to extract & insert the data
-        for (int i = 0 ; i < nlist.getLength() ; i++) {
-            Node node = nlist.item(i);
+        for (int i = 0; i < NodeList.getLength() ; i++) {
+            Node node = NodeList.item(i);
             List<String> columns = Arrays
                     .asList(getAttrValue(node, "id"),
-                            getTextContent(node, "author"),
-                            getTextContent(node, "title"),
-                            getTextContent(node, "genre"),
-                            getTextContent(node, "price"),
-                            getTextContent(node, "publish_date"),
-                            getTextContent(node, "description"));
+                            getTextContent(node, "Flight Reseveration"),
+                            getTextContent(node, "outflightno"),
+                            getTextContent(node, "outflightclass"),
+                            getTextContent(node, "outdeparttime"),
+                            getTextContent(node, "outdepartdate),
+                            getTextContent(node, "outcarriercode"),
+                            getTextContent(node, "outbookingclass"),
+                            getTextContent(node, "outarrivaltime"),
+                            getTextContent(node, "outarrivaltime"),
+                            getTextContent(node, "outarrivaldate"),
+                            getTextContent(node, "originalprice),
+                            getTextContent(node, "originalcurrency"),);
+                            getTextContent(node, "oneway"),
+                            getTextContent(node, "inflightno"),
+                            getTextContent(node, "inflightclass"),
+                            getTextContent(node, "indeparttime"),
+                            getTextContent(node, "indepartdate),
+                            getTextContent(node, "incarriercode"),
+                            getTextContent(node, "inbookingclass"),
+                            getTextContent(node, "inarrivaltime"),
+                            getTextContent(node, "inarrivaltime"),
+                            getTextContent(node, "inarrivaldate"),
+                            getTextContent(node, "id"),
+                            getTextContent(node, "originalcurrency"),
+                            getTextContent(node, "destair"),
+                            getTextContent(node, "despair"),
+                            getTextContent(node, "carrier"));
+
             for (int n = 0 ; n < columns.size() ; n++) {
                 stmt.setString(n+1, columns.get(n));
             }
